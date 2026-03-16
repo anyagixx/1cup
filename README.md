@@ -1,122 +1,89 @@
 # 1C Web Console
 
-Веб-консоль для управления кластером 1С:Предприятие 8.3.x на Ubuntu.
+Веб-консоль для управления кластером 1С:Предприятие 8.3.x.
+
+## Быстрая установка
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/anyagixx/1cup/main/install.sh | bash
+```
+
+Установщик спросит:
+- IP сервера кластера 1С
+- Порт кластера (по умолчанию 1545)
+- Логин/пароль кластера (если есть)
+
+После установки откройте: **http://IP-СЕРВЕРА:8080**
+
+- **Логин:** admin
+- **Пароль:** admin
 
 ## Возможности
 
 | Функция | Описание |
-|---------|------------------------------------------------------------------|
-| **Dashboard** — обзор состояния кластера, статист |
-| **Servers** — список серверов и процессов |
-    **Databases** — управление информационными базами
-    **Sessions** — просмотр и завершение сеансов |
-    **Logs** — просмотр и экспорт логов |
-    **Settings** — систем настройки |
-    **Real-time** — WebSocket для live updates |
-| **Backup** — резервное копирование БД |
+|---------|----------|
+| Dashboard | Обзор состояния кластера |
+| Servers | Список серверов и процессов |
+| Databases | Управление информационными базами |
+| Sessions | Просмотр и завершение сеансов |
+| Logs | Просмотр и экспорт логов |
+| Settings | Системные настройки |
+| Real-time | WebSocket для live updates |
 
-| **API** | `/api/auth/*` — аутентификация
-    `/api/cluster/*` — информация о кластере
-    `/api/cluster/status` — статус кластера
-    `/api/servers/*` — список серверов
-    `/api/servers/{id}/*` — детали сервера
-    `/api/servers/{id}/process/*` — процессы сервера
-    `/api/servers/restart` — перезапуск сервера
-    `/api/databases` — CRUD для баз данных
-    `/api/databases` — создание новой базы
-    `/api/databases` — удал базы
-    `/api/databases/{id}/backup/*` — резервное копирование
-    `/api/databases/{id}/export/*` — экспорт логов (формат: CSV, JSON)
-    `/api/logs` — просмотр логов
-    `/api/logs/stream` — WebSocket streaming
-    `/api/logs/export` — экспорт логов (формат: CSV, JSON)
-    `/ws` — WebSocket endpoint
-    `/health` — Health check
-    `/` — Root endpoint
-    `/api/auth/login` — Вход
-    `/api/auth/logout` — Выход
-    `/api/auth/refresh` — Обновление токена
-    `/api/auth/me` — Текущийий пользователь
-    `/api/auth/change-password` — Смена пароль
-    `/api/auth/users` — Список пользователей (только admin)
-    `/api/auth/users` — Созд пользователя
-    `/api/auth/users/{id}` — Получ пользователя
-    `/api/auth/users` — Обновить пользователя
-    `/api/auth/users/{id}` — Удалить пользователя
-    `/api/databases` — Список баз данных
-    `/api/databases` — Создание новой базы
-    `/api/databases` — удаление базы данных
-    `/api/databases` — экспорт логов
-    `/api/logs` — Получение журнала
-    `/api/logs/stream` — WebSocket стриминг
-    `/api/logs/export` — Экспорт логов
-    `/api/sessions` — Активные сеансы
-    `/api/sessions` — Завершить сеанса
-    `/api/sessions/bulk-terminate` — Массовое завершение сеансов
-    `/api/sessions/terminate-all` — Завершить всех сеансовов кластере
-    `/ws/events` — WebSocket для real-time updates
-    ```
-
-## Запуск
-
-```bash
-# Первый запуск
-./start.sh init
-
-# Или через Docker
-./start.sh start
-
-# Режим разработки
-./start.sh dev
-
-# Очистка
-./start.sh clean
-
-# Или через Docker Compose
-./start.sh start
-./start.sh logs
-./start.sh stop
-./start.sh restart
-./start.sh status
-./start.sh shell
-./start.sh backup
-./start.sh build
-./start.sh build
-./start.sh dev
-./start.sh clean
-./start.sh logs [service]
-./start.sh logs backend
-./start.sh logs frontend
-./start.sh status
-./start.sh help
-```
-
----
-
-## Использование
-
-1. **Убедитесь, что вы делите**:**Да** файл в `.env`** эти:
-   - Проверьте `RAC_EXECUTABLE` path in `.env` (или использ `/opt/1cv8/x86_64/8.3.23.1739/rac`)
-   - Проверьте установлен PostgreSQL и Redis (если you want to use them locally)
-   - Pровер if Docker and Docker Compose are installed (run `make install` to skip tests)
-   - PULL Docker images if needed
-   - BUILD and push to Docker Hub
-
-## Запуск
+## Команды управления
 
 ```bash
 # Запуск
-./start.sh
+/opt/1c-web-console/start.sh
 
-# Или
-docker compose up -d
-# или для разработки
-docker compose build --no-cache
-docker compose pull
-docker compose up -d
+# Остановка
+/opt/1c-web-console/stop.sh
 
-# Откройте в браузере: http://localhost:8080
+# Перенастроить подключение к 1С
+/opt/1c-web-console/reconfigure.sh
 
-# Логин: admin / Пароль: admin
-# ⏠️ Смените пароль администратора после первого входа!
+# Логи
+cd /opt/1c-web-console && docker compose -f docker-compose.standalone.yml logs -f
+```
 
+## Требования
+
+- Ubuntu 20.04+
+- Установленный 1С:Предприятие 8.3.x
+- Доступ к серверу кластера 1С
+
+## Ручная установка
+
+```bash
+# Клонировать
+git clone https://github.com/anyagixx/1cup.git /opt/1c-web-console
+cd /opt/1c-web-console
+
+# Создать .env
+cp .env.example .env
+nano .env
+
+# Запустить
+docker compose -f docker-compose.standalone.yml up -d
+```
+
+## API Endpoints
+
+| Endpoint | Описание |
+|----------|----------|
+| `POST /api/auth/login` | Вход |
+| `GET /api/cluster/status` | Статус кластера |
+| `GET /api/servers` | Список серверов |
+| `GET /api/databases` | Список баз данных |
+| `GET /api/sessions` | Активные сеансы |
+| `GET /api/logs` | Журнал событий |
+| `WS /ws/events` | WebSocket события |
+
+## Docker Hub
+
+- `putopelatudo/1cup:backend-latest`
+- `putopelatudo/1cup:frontend-latest`
+
+## Лицензия
+
+MIT
