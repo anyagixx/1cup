@@ -30,30 +30,44 @@ services:
       retries: 5
 
   backend:
-    build: ./backend
+    image: putopelatudo/1cup:backend:v1.0.0
+    build:
+      context: ./backend
+      dockerfile: ./backend/Dockerfile
     environment:
       DATABASE_URL: postgresql+asyncpg://postgres:5432/1c_console
       REDIS_URL: redis://redis:6379/0
-      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
-      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-change-me-in-production-jwt}
       RAC_EXECUTABLE: ${RAC_EXECUTABLE:-/opt/1cv8/x86_64/8.3.23.1739/rac}
       RAC_CLUSTER_HOST: ${RAC_CLUSTER_HOST:-localhost}
       RAC_CLUSTER_PORT: ${RAC_CLUSTER_PORT:-1545}
-      CORS_ORIGINS: '["http://localhost:3000","http://localhost"]'
+      RAC_CLUSTER_USER: ${RAC_CLUSTER_USER:-}
+      RAC_CLUSTER_PASSWORD: ${RAC_CLUSTER_PASSWORD:-}
+      CORS_ORIGINS: ${CORS_ORIGINS:-["http://localhost:3000","http://localhost"]}
+    env_file: .env
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend/app:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
-    volumes:
-      - ./backend/app:/app/app:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
   frontend:
-    build: ./frontend
+    image: putopelatudo/1cup:frontend:v1.0.0
+    build:
+      context: ./frontend
+      dockerfile: ./frontend/Dockerfile
     ports:
-      - "80:80"
+      - "3000:80"
     depends_on:
       - backend
 
