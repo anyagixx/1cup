@@ -15,7 +15,7 @@ print_header() {
     echo -e "${BLUE}"
     echo "╔══════════════════════════════════════════╗"
     echo "║       1C Web Console Installer           ║"
-    echo "║           Version 1.0.1                  ║"
+    echo "║           Version 1.0.2                  ║"
     echo "╚══════════════════════════════════════════╝"
     echo -e "${NC}"
 }
@@ -62,16 +62,26 @@ ask_settings() {
     echo -e "${BLUE}Настройка подключения к кластеру 1С:${NC}"
     echo ""
     
-    read -p "IP сервера кластера 1С [localhost]: " CLUSTER_HOST
+    if [[ -t 0 ]]; then
+        READ_CMD="read"
+    else
+        READ_CMD="read </dev/tty"
+    fi
+    
+    echo -n "IP сервера кластера 1С [localhost]: "
+    eval "$READ_CMD CLUSTER_HOST"
     CLUSTER_HOST=${CLUSTER_HOST:-localhost}
     
-    read -p "Порт кластера [1545]: " CLUSTER_PORT
+    echo -n "Порт кластера [1545]: "
+    eval "$READ_CMD CLUSTER_PORT"
     CLUSTER_PORT=${CLUSTER_PORT:-1545}
     
-    read -p "Логин кластера (Enter если нет): " CLUSTER_USER
+    echo -n "Логин кластера (Enter если нет): "
+    eval "$READ_CMD CLUSTER_USER"
     
     if [[ -n "$CLUSTER_USER" ]]; then
-        read -s -p "Пароль кластера: " CLUSTER_PASSWORD
+        echo -n "Пароль кластера: "
+        eval "read -s CLUSTER_PASSWORD </dev/tty"
         echo ""
     else
         CLUSTER_PASSWORD=""
@@ -92,7 +102,8 @@ ask_settings() {
     done
     
     if [[ -z "$RAC_PATH" ]]; then
-        read -p "Путь к rac [/opt/1cv8/x86_64/8.3.23.1739/rac]: " RAC_PATH
+        echo -n "Путь к rac [/opt/1cv8/x86_64/8.3.23.1739/rac]: "
+        eval "$READ_CMD RAC_PATH"
         RAC_PATH=${RAC_PATH:-/opt/1cv8/x86_64/8.3.23.1739/rac}
     else
         print_success "Найден rac: $RAC_PATH"
