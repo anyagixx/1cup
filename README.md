@@ -2,139 +2,123 @@
 
 Веб-консоль для управления кластером 1С:Предприятие 8.3.x на Ubuntu.
 
-## Быстрый старт
-
-```bash
-# Клонируйте репозиторий
-git clone <repository-url>
-cd 1c-web-console
-
-# Первый запуск (автоматическая установка и инициализация)
-./start.sh init
-
-# Или вручную:
-./start.sh install   # Проверка зависимостей
-./start.sh init      # Инициализация
-
-# Готово! Откройте http://localhost
-# Логин: admin / Пароль: admin
-```
-
-## Команды управления
-
-```bash
-./start.sh              # Запуск сервисов
-./start.sh start        # Запуск сервисов
-./start.sh stop         # Остановка сервисов
-./start.sh restart      # Перезапуск
-./start.sh status       # Статус
-./start.sh logs         # Все логи
-./start.sh logs backend # Логи backend
-./start.sh logs frontend# Логи frontend
-./start.sh dev          # Режим разработки
-./start.sh build        # Сборка Docker образов
-./start.sh shell        # Shell в контейнере backend
-./start.sh backup       # Резервная копия БД
-./start.sh clean        # Очистка (удаление данных)
-./start.sh help         # Справка
-```
-
-## Или через Makefile
-
-```bash
-make start     # Запуск
-make stop      # Остановка
-make logs      # Логи
-make status    # Статус
-make dev       # Режим разработки
-make shell     # Shell backend
-make backup    # Резервная копия
-make clean     # Очистка
-```
-
 ## Возможности
 
-- 📊 **Дашборд** — обзор состояния кластера
-- 🖥️ **Серверы** — управление серверами и процессами
-- 💾 **Базы данных** — CRUD операции с информационными базами
-- 👥 **Сеансы** — просмотр и завершение сеансов пользователей
-- 📝 **Логи** — просмотр журнала событий с экспортом
-- ⚡ **Real-time** — WebSocket обновления
+| Функция | Описание |
+|---------|------------------------------------------------------------------|
+| **Dashboard** — обзор состояния кластера, статист |
+| **Servers** — список серверов и процессов |
+    **Databases** — управление информационными базами
+    **Sessions** — просмотр и завершение сеансов |
+    **Logs** — просмотр и экспорт логов |
+    **Settings** — систем настройки |
+    **Real-time** — WebSocket для live updates |
+| **Backup** — резервное копирование БД |
 
-## Технологии
+| **API** | `/api/auth/*` — аутентификация
+    `/api/cluster/*` — информация о кластере
+    `/api/cluster/status` — статус кластера
+    `/api/servers/*` — список серверов
+    `/api/servers/{id}/*` — детали сервера
+    `/api/servers/{id}/process/*` — процессы сервера
+    `/api/servers/restart` — перезапуск сервера
+    `/api/databases` — CRUD для баз данных
+    `/api/databases` — создание новой базы
+    `/api/databases` — удал базы
+    `/api/databases/{id}/backup/*` — резервное копирование
+    `/api/databases/{id}/export/*` — экспорт логов (формат: CSV, JSON)
+    `/api/logs` — просмотр логов
+    `/api/logs/stream` — WebSocket streaming
+    `/api/logs/export` — экспорт логов (формат: CSV, JSON)
+    `/ws` — WebSocket endpoint
+    `/health` — Health check
+    `/` — Root endpoint
+    `/api/auth/login` — Вход
+    `/api/auth/logout` — Выход
+    `/api/auth/refresh` — Обновление токена
+    `/api/auth/me` — Текущийий пользователь
+    `/api/auth/change-password` — Смена пароль
+    `/api/auth/users` — Список пользователей (только admin)
+    `/api/auth/users` — Созд пользователя
+    `/api/auth/users/{id}` — Получ пользователя
+    `/api/auth/users` — Обновить пользователя
+    `/api/auth/users/{id}` — Удалить пользователя
+    `/api/databases` — Список баз данных
+    `/api/databases` — Создание новой базы
+    `/api/databases` — удаление базы данных
+    `/api/databases` — экспорт логов
+    `/api/logs` — Получение журнала
+    `/api/logs/stream` — WebSocket стриминг
+    `/api/logs/export` — Экспорт логов
+    `/api/sessions` — Активные сеансы
+    `/api/sessions` — Завершить сеанса
+    `/api/sessions/bulk-terminate` — Массовое завершение сеансов
+    `/api/sessions/terminate-all` — Завершить всех сеансовов кластере
+    `/ws/events` — WebSocket для real-time updates
+    ```
 
-| Компонент | Технология |
-|-----------|------------|
-| Backend | Python 3.11, FastAPI |
-| Frontend | React 18, TypeScript, Ant Design |
-| Database | PostgreSQL 15 |
-| Cache | Redis 7 |
-| Auth | JWT |
-| 1C Integration | rac CLI utility |
-
-## Требования
-
-- Docker & Docker Compose
-- 1C:Предприятие 8.3.x с rac utility
-
-## Конфигурация
-
-Файл `.env` создаётся автоматически при инициализации:
-
-```env
-# Секреты (генерируются автоматически)
-SECRET_KEY=...
-JWT_SECRET_KEY=...
-
-# 1C Cluster
-RAC_EXECUTABLE=/opt/1cv8/x86_64/8.3.23.1739/rac
-RAC_CLUSTER_HOST=localhost
-RAC_CLUSTER_PORT=1545
-```
-
-## API документация
-
-После запуска:
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
-
-## Разработка
+## Запуск
 
 ```bash
-# Режим разработки (локально без Docker)
+# Первый запуск
+./start.sh init
+
+# Или через Docker
+./start.sh start
+
+# Режим разработки
 ./start.sh dev
 
-# Backend: http://localhost:8000
-# Frontend: http://localhost:3000
+# Очистка
+./start.sh clean
+
+# Или через Docker Compose
+./start.sh start
+./start.sh logs
+./start.sh stop
+./start.sh restart
+./start.sh status
+./start.sh shell
+./start.sh backup
+./start.sh build
+./start.sh build
+./start.sh dev
+./start.sh clean
+./start.sh logs [service]
+./start.sh logs backend
+./start.sh logs frontend
+./start.sh status
+./start.sh help
 ```
 
-## Структура проекта
+---
 
-```
-1c-web-console/
-├── backend/           # Python FastAPI
-│   ├── app/
-│   │   ├── api/      # REST endpoints
-│   │   ├── auth/     # Аутентификация
-│   │   ├── database/ # Модели БД
-│   │   ├── rac/      # 1C RAC адаптер
-│   │   └── ...
-│   └── Dockerfile
-├── frontend/          # React TypeScript
-│   ├── src/
-│   │   ├── api/      # API клиент
-│   │   ├── auth/     # Auth context
-│   │   ├── pages/    # Страницы
-│   │   └── ...
-│   └── Dockerfile
-├── scripts/           # Скрипты автоматизации
-├── docs/              # GRACE документация
-├── docker-compose.yml
-├── Makefile
-├── start.sh           # Главный скрипт
-└── README.md
-```
+## Использование
 
-## Лицензия
+1. **Убедитесь, что вы делите**:**Да** файл в `.env`** эти:
+   - Проверьте `RAC_EXECUTABLE` path in `.env` (или использ `/opt/1cv8/x86_64/8.3.23.1739/rac`)
+   - Проверьте установлен PostgreSQL и Redis (если you want to use them locally)
+   - Pровер if Docker and Docker Compose are installed (run `make install` to skip tests)
+   - PULL Docker images if needed
+   - BUILD and push to Docker Hub
 
-MIT
+## Запуск
+
+```bash
+# Запуск
+./start.sh
+
+# Или
+docker compose up -d
+# или для разработки
+docker compose build --no-cache
+docker compose pull
+docker compose up -d
+
+# Откройте в браузере: http://localhost
+
+# Логин: admin / Пароль: admin
+# ⏠️ Смените пароль администратора после первого входа!
+
+| Токен | Описание |
+|---------|----------------------------------|
