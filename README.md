@@ -115,7 +115,7 @@ docker compose build --no-cache
 docker compose pull
 docker compose up -d
 
-# Откройте в браузере: http://localhost
+# Откройте в браузере: http://localhost:8080
 
 # Логин: admin / Пароль: admin
 # ⏠️ Смените пароль администратора после первого входа!

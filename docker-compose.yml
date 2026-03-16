@@ -42,7 +42,7 @@ services:
       RAC_CLUSTER_PORT: ${RAC_CLUSTER_PORT:-1545}
       RAC_CLUSTER_USER: ${RAC_CLUSTER_USER:-}
       RAC_CLUSTER_PASSWORD: ${RAC_CLUSTER_PASSWORD:-}
-      CORS_ORIGINS: ${CORS_ORIGINS:-["http://localhost:3000","http://localhost"]}
+      CORS_ORIGINS: ${CORS_ORIGINS:-["http://localhost:8080","http://localhost"]}
     env_file: .env
     ports:
       - "8000:8000"
@@ -67,7 +67,7 @@ services:
       context: ./frontend
       dockerfile: ./frontend/Dockerfile
     ports:
-      - "3000:80"
+      - "8080:80"
     depends_on:
       - backend
 

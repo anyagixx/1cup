@@ -56,7 +56,7 @@ start_services() {
     echo ""
     log_info "Сервисы запущены!"
     echo ""
-    echo "  Web:  http://localhost"
+    echo "  Web:  http://localhost:8080"
     echo "  API:  http://localhost:8000/docs"
     echo "  User: admin / admin"
 }

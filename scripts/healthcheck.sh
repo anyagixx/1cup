@@ -48,14 +48,14 @@ main() {
     fi
     
     check_service "Backend API" "http://localhost:8000/health" 30 || FAILED=1
-    check_service "Frontend" "http://localhost" 10 || FAILED=1
+    check_service "Frontend" "http://localhost:8080" 10 || FAILED=1
     
     $SILENT || echo ""
     
     if [ $FAILED -eq 0 ]; then
         $SILENT || log_info "Все сервисы работают"
         $SILENT || echo ""
-        $SILENT || echo "Откройте http://localhost в браузере"
+        $SILENT || echo "Откройте http://localhost:8080 в браузере"
         exit 0
     else
         $SILENT || log_error "Некоторые сервисы недоступны"
