@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DevelopmentPlan>
+  <Meta>
+    <ProjectName>1c-web-console</ProjectName>
+    <Version>1.0.0</Version>
+    <Created>2026-03-16</Created>
+  </Meta>
+
+  <Modules>
+    <!-- Backend Modules -->
+    <Module id="M-BE-CORE" type="UTILITY" status="pending">
+      <Name>Core Configuration</Name>
+      <Purpose>Application configuration, logging setup, custom exceptions</Purpose>
+      <Scope>Settings management, structured logging, error handling</Scope>
+      <Depends></Depends>
+      <Exports>
+        <Export>Settings class</Export>
+        <Export>setup_logging()</Export>
+        <Export>AppException hierarchy</Export>
+      </Exports>
+      <FilePath>backend/app/config.py, backend/app/exceptions.py, backend/app/logging_config.py</FilePath>
+    </Module>
+
+    <Module id="M-BE-DB" type="DATA_LAYER" status="pending">
+      <Name>Database Layer</Name>
+      <Purpose>SQLAlchemy models, database connection, migrations</Purpose>
+      <Scope>User model, settings model, audit log model, database session management</Scope>
+      <Depends>M-BE-CORE</Depends>
+      <Exports>
+        <Export>Base model</Export>
+        <Export>User model</Export>
+        <Export>Settings model</Export>
+        <Export>AuditLog model</Export>
+        <Export>get_db() dependency</Export>
+      </Exports>
+      <FilePath>backend/app/database/models.py, backend/app/database/schemas.py, backend/app/database/session.py</FilePath>
+    </Module>
+
+    <Module id="M-BE-AUTH" type="CORE_LOGIC" status="pending">
+      <Name>Authentication</Name>
+      <Purpose>JWT token management, user authentication, authorization</Purpose>
+      <Scope>Login, logout, token refresh, role-based access control</Scope>
+      <Depends>M-BE-CORE, M-BE-DB</Depends>
+      <Exports>
+        <Export>create_access_token()</Export>
+        <Export>verify_token()</Export>
+        <Export>authenticate_user()</Export>
+        <Export>get_current_user() dependency</Export>
+        <Export>require_role() dependency</Export>
+      </Exports>
+      <FilePath>backend/app/auth/router.py, backend/app/auth/service.py, backend/app/auth/jwt_handler.py, backend/app/auth/dependencies.py</FilePath>
+    </Module>
+
+    <Module id="M-BE-1C-RAC" type="INTEGRATION" status="pending">
+      <Name>1C RAC Adapter</Name>
+      <Purpose>Wrapper for rac CLI utility to manage 1C cluster</Purpose>
+      <Scope>Execute rac commands, parse output, handle errors</Scope>
+      <Depends>M-BE-CORE</Depends>
+      <Exports>
+        <Export>RacClient class</Export>
+        <Export>get_cluster_info()</Export>
+        <Export>get_servers_list()</Export>
+        <Export>get_databases_list()</Export>
+        <Export>get_sessions_list()</Export>
+        <Export>terminate_session()</Export>
+        <Export>get_logs()</Export>
+      </Exports>
+      <FilePath>backend/app/rac/client.py, backend/app/rac/parsers.py, backend/app/rac/commands.py</FilePath>
+    </Module>
+
+    <Module id="M-BE-CACHE" type="DATA_LAYER" status="pending">
+      <Name>Redis Cache</Name>
+      <Purpose>Caching layer for API responses and session data</Purpose>
+      <Scope>Redis connection, cache get/set/delete, pub/sub for WebSocket</Scope>
+      <Depends>M-BE-CORE</Depends>
+      <Exports>
+        <Export>RedisClient class</Export>
+        <Export>cache_get()</Export>
+        <Export>cache_set()</Export>
+        <Export>cache_delete()</Export>
+      </Exports>
+      <FilePath>backend/app/cache/redis_client.py</FilePath>
+    </Module>
+
+    <Module id="M-BE-WS" type="ENTRY_POINT" status="pending">
+      <Name>WebSocket Hub</Name>
+      <Purpose>Real-time event broadcasting to connected clients</Purpose>
+      <Scope>Connection management, event publishing, heartbeat</Scope>
+      <Depends>M-BE-CORE, M-BE-CACHE, M-BE-AUTH</Depends>
+      <Exports>
+        <Export>ConnectionManager class</Export>
+        <Export>broadcast_event()</Export>
+        <Export>websocket endpoint</Export>
+      </Exports>
+      <FilePath>backend/app/websocket/hub.py</FilePath>
+    </Module>
+
+    <Module id="M-BE-API-CLUSTER" type="ENTRY_POINT" status="pending">
+      <Name>Cluster API</Name>
+      <Purpose>REST endpoints for cluster management</Purpose>
+      <Scope>Cluster info, status, settings</Scope>
+      <Depends>M-BE-AUTH, M-BE-1C-RAC, M-BE-CACHE</Depends>
+      <Exports>
+        <Export>router: /api/cluster/*</Export>
+      </Exports>
+      <FilePath>backend/app/api/cluster.py</FilePath>
+    </Module>
+
+    <Module id="M-BE-API-SERVERS" type="ENTRY_POINT" status="pending">
+      <Name>Servers API</Name>
+      <Purpose>REST endpoints for server management</Purpose>
+      <Scope>Server list, details, processes, restart</Scope>
+      <Depends>M-BE-AUTH, M-BE-1C-RAC, M-BE-CACHE</Depends>
+      <Exports>
+        <Export>router: /api/servers/*</Export>
+      </Exports>
+      <FilePath>backend/app/api/servers.py</FilePath>
+    </Module>
+
+    <Module id="M-BE-API-DBS" type="ENTRY_POINT" status="pending">
+      <Name>Databases API</Name>
+      <Purpose>REST endpoints for database management</Purpose>
+      <Scope>CRUD operations, backup</Scope>
+      <Depends>M-BE-AUTH, M-BE-1C-RAC, M-BE-DB, M-BE-CACHE</Depends>
+      <Exports>
+        <Export>router: /api/databases/*</Export>
+      </Exports>
+      <FilePath>backend/app/api/databases.py</FilePath>
+    </Module>
+
+    <Module id="M-BE-API-SESSIONS" type="ENTRY_POINT" status="pending">
+      <Name>Sessions API</Name>
+      <Purpose>REST endpoints for session management</Purpose>
+      <Scope>Active sessions, terminate, bulk operations</Scope>
+      <Depends>M-BE-AUTH, M-BE-1C-RAC, M-BE-CACHE</Depends>
+      <Exports>
+        <Export>router: /api/sessions/*</Export>
+      </Exports>
+      <FilePath>backend/app/api/sessions.py</FilePath>
+    </Module>
+
+    <Module id="M-BE-API-LOGS" type="ENTRY_POINT" status="pending">
+      <Name>Logs API</Name>
+      <Purpose>REST endpoints for log viewing</Purpose>
+      <Scope>Log list, filters, export</Scope>
+      <Depends>M-BE-AUTH, M-BE-1C-RAC</Depends>
+      <Exports>
+        <Export>router: /api/logs/*</Export>
+      </Exports>
+      <FilePath>backend/app/api/logs.py</FilePath>
+    </Module>
+
+    <!-- Frontend Modules -->
+    <Module id="M-FE-CORE" type="UTILITY" status="pending">
+      <Name>Frontend Core</Name>
+      <Purpose>API client, routing, theme configuration</Purpose>
+      <Scope>Axios setup, router config, theme, shared utilities</Scope>
+      <Depends></Depends>
+      <Exports>
+        <Export>apiClient</Export>
+        <Export>router configuration</Export>
+        <Export>theme configuration</Export>
+      </Exports>
+      <FilePath>frontend/src/api/client.ts, frontend/src/main.tsx, frontend/src/App.tsx</FilePath>
+    </Module>
+
+    <Module id="M-FE-AUTH" type="UI_COMPONENT" status="pending">
+      <Name>Auth Components</Name>
+      <Purpose>Authentication UI and context</Purpose>
+      <Scope>Login page, auth context, private route</Scope>
+      <Depends>M-FE-CORE</Depends>
+      <Exports>
+        <Export>AuthContext</Export>
+        <Export>useAuth hook</Export>
+        <Export>Login component</Export>
+        <Export>PrivateRoute component</Export>
+      </Exports>
+      <FilePath>frontend/src/auth/AuthContext.tsx, frontend/src/auth/Login.tsx, frontend/src/auth/PrivateRoute.tsx</FilePath>
+    </Module>
+
+    <Module id="M-FE-LAYOUT" type="UI_COMPONENT" status="pending">
+      <Name>Main Layout</Name>
+      <Purpose>Application layout with sidebar and header</Purpose>
+      <Scope>Layout wrapper, navigation, header with user menu</Scope>
+      <Depends>M-FE-CORE, M-FE-AUTH</Depends>
+      <Exports>
+        <Export>MainLayout component</Export>
+        <Export>Sidebar component</Export>
+        <Export>Header component</Export>
+      </Exports>
+      <FilePath>frontend/src/layout/MainLayout.tsx, frontend/src/layout/Sidebar.tsx, frontend/src/layout/Header.tsx</FilePath>
+    </Module>
+
+    <Module id="M-FE-DASHBOARD" type="UI_COMPONENT" status="pending">
+      <Name>Dashboard Page</Name>
+      <Purpose>Main dashboard with cluster overview</Purpose>
+      <Scope>Cluster status cards, metrics charts, recent events</Scope>
+      <Depends>M-FE-CORE, M-FE-LAYOUT</Depends>
+      <Exports>
+        <Export>Dashboard component</Export>
+      </Exports>
+      <FilePath>frontend/src/pages/Dashboard.tsx</FilePath>
+    </Module>
+
+    <Module id="M-FE-SERVERS" type="UI_COMPONENT" status="pending">
+      <Name>Servers Page</Name>
+      <Purpose>Server management interface</Purpose>
+      <Scope>Server list, details modal, process list, actions</Scope>
+      <Depends>M-FE-CORE, M-FE-LAYOUT</Depends>
+      <Exports>
+        <Export>Servers component</Export>
+      </Exports>
+      <FilePath>frontend/src/pages/Servers.tsx</FilePath>
+    </Module>
+
+    <Module id="M-FE-DATABASES" type="UI_COMPONENT" status="pending">
+      <Name>Databases Page</Name>
+      <Purpose>Database management interface</Purpose>
+      <Scope>Database list, add/edit modal, backup actions</Scope>
+      <Depends>M-FE-CORE, M-FE-LAYOUT</Depends>
+      <Exports>
+        <Export>Databases component</Export>
+      </Exports>
+      <FilePath>frontend/src/pages/Databases.tsx</FilePath>
+    </Module>
+
+    <Module id="M-FE-SESSIONS" type="UI_COMPONENT" status="pending">
+      <Name>Sessions Page</Name>
+      <Purpose>Session management interface</Purpose>
+      <Scope>Active sessions table, terminate actions, filters</Scope>
+      <Depends>M-FE-CORE, M-FE-LAYOUT</Depends>
+      <Exports>
+        <Export>Sessions component</Export>
+      </Exports>
+      <FilePath>frontend/src/pages/Sessions.tsx</FilePath>
+    </Module>
+
+    <Module id="M-FE-LOGS" type="UI_COMPONENT" status="pending">
+      <Name>Logs Page</Name>
+      <Purpose>Log viewing interface</Purpose>
+      <Scope>Log table, filters, real-time updates, export</Scope>
+      <Depends>M-FE-CORE, M-FE-LAYOUT</Depends>
+      <Exports>
+        <Export>Logs component</Export>
+      </Exports>
+      <FilePath>frontend/src/pages/Logs.tsx</FilePath>
+    </Module>
+
+    <Module id="M-FE-SETTINGS" type="UI_COMPONENT" status="pending">
+      <Name>Settings Page</Name>
+      <Purpose>System settings interface</Purpose>
+      <Scope>User management, system configuration</Scope>
+      <Depends>M-FE-CORE, M-FE-LAYOUT</Depends>
+      <Exports>
+        <Export>Settings component</Export>
+      </Exports>
+      <FilePath>frontend/src/pages/Settings.tsx</FilePath>
+    </Module>
+  </Modules>
+
+  <ImplementationOrder>
+    <Phase id="Phase-1" name="Foundation" status="pending">
+      <Step order="1">M-BE-CORE</Step>
+      <Step order="2">M-BE-DB</Step>
+      <Step order="3">M-BE-AUTH</Step>
+      <Step order="4">M-BE-1C-RAC</Step>
+    </Phase>
+
+    <Phase id="Phase-2" name="Backend API" status="pending">
+      <Step order="1">M-BE-CACHE</Step>
+      <Step order="2">M-BE-WS</Step>
+      <Step order="3">M-BE-API-CLUSTER</Step>
+      <Step order="4">M-BE-API-SERVERS</Step>
+      <Step order="5">M-BE-API-DBS</Step>
+      <Step order="6">M-BE-API-SESSIONS</Step>
+      <Step order="7">M-BE-API-LOGS</Step>
+    </Phase>
+
+    <Phase id="Phase-3" name="Frontend Core" status="pending">
+      <Step order="1">M-FE-CORE</Step>
+      <Step order="2">M-FE-AUTH</Step>
+      <Step order="3">M-FE-LAYOUT</Step>
+    </Phase>
+
+    <Phase id="Phase-4" name="Frontend Pages" status="pending">
+      <Step order="1">M-FE-DASHBOARD</Step>
+      <Step order="2">M-FE-SERVERS</Step>
+      <Step order="3">M-FE-DATABASES</Step>
+      <Step order="4">M-FE-SESSIONS</Step>
+      <Step order="5">M-FE-LOGS</Step>
+      <Step order="6">M-FE-SETTINGS</Step>
+    </Phase>
+
+    <Phase id="Phase-5" name="Infrastructure" status="pending">
+      <Step order="1">Docker configuration</Step>
+      <Step order="2">Nginx configuration</Step>
+      <Step order="3">docker-compose.yml</Step>
+    </Phase>
+  </ImplementationOrder>
+
+  <DataFlows>
+    <DataFlow id="DF-001" from="M-FE-AUTH" to="M-BE-AUTH">
+      <Description>Login credentials → JWT token</Description>
+      <Format>JSON over HTTP</Format>
+    </DataFlow>
+    <DataFlow id="DF-002" from="M-BE-API-*" to="M-BE-1C-RAC">
+      <Description>API requests → rac commands</Description>
+      <Format>Function calls</Format>
+    </DataFlow>
+    <DataFlow id="DF-003" from="M-BE-1C-RAC" to="1C Cluster">
+      <Description>rac CLI execution</Description>
+      <Format>Subprocess</Format>
+    </DataFlow>
+    <DataFlow id="DF-004" from="M-BE-WS" to="M-FE-*">
+      <Description>Real-time events</Description>
+      <Format>WebSocket JSON</Format>
+    </DataFlow>
+    <DataFlow id="DF-005" from="M-BE-*" to="M-BE-CACHE">
+      <Description>Cached responses</Description>
+      <Format>Redis protocol</Format>
+    </DataFlow>
+  </DataFlows>
+</DevelopmentPlan>

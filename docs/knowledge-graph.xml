@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<KnowledgeGraph>
+  <Meta>
+    <ProjectName>1c-web-console</ProjectName>
+    <Version>1.0.0</Version>
+    <LastUpdated>2026-03-16</LastUpdated>
+  </Meta>
+
+  <Modules>
+    <!-- Backend Modules -->
+    <Module id="M-BE-CORE" name="Core Configuration" type="UTILITY">
+      <FilePath>backend/app/config.py</FilePath>
+      <FilePath>backend/app/exceptions.py</FilePath>
+      <FilePath>backend/app/logging_config.py</FilePath>
+      <Annotations>
+        <Export type="class">Settings</Export>
+        <Export type="function">setup_logging</Export>
+        <Export type="class">AppException</Export>
+        <Export type="class">AuthenticationException</Export>
+        <Export type="class">RacCommandException</Export>
+      </Annotations>
+    </Module>
+
+    <Module id="M-BE-DB" name="Database Layer" type="DATA_LAYER">
+      <FilePath>backend/app/database/models.py</FilePath>
+      <FilePath>backend/app/database/schemas.py</FilePath>
+      <FilePath>backend/app/database/session.py</FilePath>
+      <Annotations>
+        <Export type="class">Base</Export>
+        <Export type="class">User</Export>
+        <Export type="class">Settings</Export>
+        <Export type="class">AuditLog</Export>
+        <Export type="function">get_db</Export>
+        <Export type="class">UserCreate</Export>
+        <Export type="class">UserResponse</Export>
+      </Annotations>
+    </Module>
+
+    <Module id="M-BE-AUTH" name="Authentication" type="CORE_LOGIC">
+      <FilePath>backend/app/auth/router.py</FilePath>
+      <FilePath>backend/app/auth/service.py</FilePath>
+      <FilePath>backend/app/auth/jwt_handler.py</FilePath>
+      <FilePath>backend/app/auth/dependencies.py</FilePath>
+      <Annotations>
+        <Export type="function">create_access_token</Export>
+        <Export type="function">verify_token</Export>
+        <Export type="function">authenticate_user</Export>
+        <Export type="function">get_current_user</Export>
+        <Export type="function">require_role</Export>
+        <Export type="class">TokenResponse</Export>
+      </Annotations>
+    </Module>
+
+    <Module id="M-BE-1C-RAC" name="1C RAC Adapter" type="INTEGRATION">
+      <FilePath>backend/app/rac/client.py</FilePath>
+      <FilePath>backend/app/rac/parsers.py</FilePath>
+      <FilePath>backend/app/rac/commands.py</FilePath>
+      <Annotations>
+        <Export type="class">RacClient</Export>
+        <Export type="function">parse_cluster_info</Export>
+        <Export type="function">parse_servers_list</Export>
+        <Export type="function">parse_databases_list</Export>
+        <Export type="function">parse_sessions_list</Export>
+        <Export type="class">ClusterInfo</Export>
+        <Export type="class">ServerInfo</Export>
+        <Export type="class">DatabaseInfo</Export>
+        <Export type="class">SessionInfo</Export>
+      </Annotations>
+    </Module>
+
+    <Module id="M-BE-CACHE" name="Redis Cache" type="DATA_LAYER">
+      <FilePath>backend/app/cache/redis_client.py</FilePath>
+      <Annotations>
+        <Export type="class">RedisClient</Export>
+        <Export type="function">cache_get</Export>
+        <Export type="function">cache_set</Export>
+        <Export type="function">cache_delete</Export>
+      </Annotations>
+    </Module>
+
+    <Module id="M-BE-WS" name="WebSocket Hub" type="ENTRY_POINT">
+      <FilePath>backend/app/websocket/hub.py</FilePath>
+      <Annotations>
+        <Export type="class">ConnectionManager</Export>
+        <Export type="function">broadcast_event</Export>
+        <Export type="function">websocket_endpoint</Export>
+      </Annotations>
+    </Module>
+
+    <Module id="M-BE-API-CLUSTER" name="Cluster API" type="ENTRY_POINT">
+      <FilePath>backend/app/api/cluster.py</FilePath>
+      <Annotations>
+        <Export type="router">/api/cluster</Export>
+        <Export type="endpoint">GET /api/cluster/info</Export>
+        <Export type="endpoint">GET /api/cluster/status</Export>
+        <Export type="endpoint">PUT /api/cluster/settings</Export>
+      </Annotations>
+    </Module>
+
+    <Module id="M-BE-API-SERVERS" name="Servers API" type="ENTRY_POINT">
+      <FilePath>backend/app/api/servers.py</FilePath>
+      <Annotations>
+        <Export type="router">/api/servers</Export>
+        <Export type="endpoint">GET /api/servers</Export>
+        <Export type="endpoint">GET /api/servers/{id}</Export>
+        <Export type="endpoint">GET /api/servers/{id}/processes</Export>
+        <Export type="endpoint">POST /api/servers/{id}/restart</Export>
+      </Annotations>
+    </Module>
+
+    <Module id="M-BE-API-DBS" name="Databases API" type="ENTRY_POINT">
+      <FilePath>backend/app/api/databases.py</FilePath>
+      <Annotations>
+        <Export type="router">/api/databases</Export>
+        <Export type="endpoint">GET /api/databases</Export>
+        <Export type="endpoint">POST /api/databases</Export>
+        <Export type="endpoint">GET /api/databases/{id}</Export>
+        <Export type="endpoint">PUT /api/databases/{id}</Export>
+        <Export type="endpoint">DELETE /api/databases/{id}</Export>
+        <Export type="endpoint">POST /api/databases/{id}/backup</Export>
+      </Annotations>
+    </Module>
+
+    <Module id="M-BE-API-SESSIONS" name="Sessions API" type="ENTRY_POINT">
+      <FilePath>backend/app/api/sessions.py</FilePath>
+      <Annotations>
+        <Export type="router">/api/sessions</Export>
+        <Export type="endpoint">GET /api/sessions</Export>
+        <Export type="endpoint">DELETE /api/sessions/{id}</Export>
+        <Export type="endpoint">POST /api/sessions/bulk-terminate</Export>
+      </Annotations>
+    </Module>
+
+    <Module id="M-BE-API-LOGS" name="Logs API" type="ENTRY_POINT">
+      <FilePath>backend/app/api/logs.py</FilePath>
+      <Annotations>
+        <Export type="router">/api/logs</Export>
+        <Export type="endpoint">GET /api/logs</Export>
+        <Export type="endpoint">GET /api/logs/stream</Export>
+        <Export type="endpoint">GET /api/logs/export</Export>
+      </Annotations>
+    </Module>
+
+    <!-- Frontend Modules -->
+    <Module id="M-FE-CORE" name="Frontend Core" type="UTILITY">
+      <FilePath>frontend/src/api/client.ts</FilePath>
+      <FilePath>frontend/src/main.tsx</FilePath>
+      <FilePath>frontend/src/App.tsx</FilePath>
+      <Annotations>
+        <Export type="const">apiClient</Export>
+        <Export type="const">router</Export>
+        <Export type="const">theme</Export>
+      </Annotations>
+    </Module>
+
+    <Module id="M-FE-AUTH" name="Auth Components" type="UI_COMPONENT">
+      <FilePath>frontend/src/auth/AuthContext.tsx</FilePath>
+      <FilePath>frontend/src/auth/Login.tsx</FilePath>
+      <FilePath>frontend/src/auth/PrivateRoute.tsx</FilePath>
+      <Annotations>
+        <Export type="context">AuthContext</Export>
+        <Export type="hook">useAuth</Export>
+        <Export type="component">Login</Export>
+        <Export type="component">PrivateRoute</Export>
+      </Annotations>
+    </Module>
+
+    <Module id="M-FE-LAYOUT" name="Main Layout" type="UI_COMPONENT">
+      <FilePath>frontend/src/layout/MainLayout.tsx</FilePath>
+      <FilePath>frontend/src/layout/Sidebar.tsx</FilePath>
+      <FilePath>frontend/src/layout/Header.tsx</FilePath>
+      <Annotations>
+        <Export type="component">MainLayout</Export>
+        <Export type="component">Sidebar</Export>
+        <Export type="component">Header</Export>
+      </Annotations>
+    </Module>
+
+    <Module id="M-FE-DASHBOARD" name="Dashboard Page" type="UI_COMPONENT">
+      <FilePath>frontend/src/pages/Dashboard.tsx</FilePath>
+      <Annotations>
+        <Export type="component">Dashboard</Export>
+      </Annotations>
+    </Module>
+
+    <Module id="M-FE-SERVERS" name="Servers Page" type="UI_COMPONENT">
+      <FilePath>frontend/src/pages/Servers.tsx</FilePath>
+      <Annotations>
+        <Export type="component">Servers</Export>
+      </Annotations>
+    </Module>
+
+    <Module id="M-FE-DATABASES" name="Databases Page" type="UI_COMPONENT">
+      <FilePath>frontend/src/pages/Databases.tsx</FilePath>
+      <Annotations>
+        <Export type="component">Databases</Export>
+      </Annotations>
+    </Module>
+
+    <Module id="M-FE-SESSIONS" name="Sessions Page" type="UI_COMPONENT">
+      <FilePath>frontend/src/pages/Sessions.tsx</FilePath>
+      <Annotations>
+        <Export type="component">Sessions</Export>
+      </Annotations>
+    </Module>
+
+    <Module id="M-FE-LOGS" name="Logs Page" type="UI_COMPONENT">
+      <FilePath>frontend/src/pages/Logs.tsx</FilePath>
+      <Annotations>
+        <Export type="component">Logs</Export>
+      </Annotations>
+    </Module>
+
+    <Module id="M-FE-SETTINGS" name="Settings Page" type="UI_COMPONENT">
+      <FilePath>frontend/src/pages/Settings.tsx</FilePath>
+      <Annotations>
+        <Export type="component">Settings</Export>
+      </Annotations>
+    </Module>
+  </Modules>
+
+  <CrossLinks>
+    <Link from="M-BE-DB" to="M-BE-CORE" type="depends" />
+    <Link from="M-BE-AUTH" to="M-BE-CORE" type="depends" />
+    <Link from="M-BE-AUTH" to="M-BE-DB" type="depends" />
+    <Link from="M-BE-1C-RAC" to="M-BE-CORE" type="depends" />
+    <Link from="M-BE-CACHE" to="M-BE-CORE" type="depends" />
+    <Link from="M-BE-WS" to="M-BE-CORE" type="depends" />
+    <Link from="M-BE-WS" to="M-BE-CACHE" type="depends" />
+    <Link from="M-BE-WS" to="M-BE-AUTH" type="depends" />
+    <Link from="M-BE-API-CLUSTER" to="M-BE-AUTH" type="depends" />
+    <Link from="M-BE-API-CLUSTER" to="M-BE-1C-RAC" type="depends" />
+    <Link from="M-BE-API-CLUSTER" to="M-BE-CACHE" type="depends" />
+    <Link from="M-BE-API-SERVERS" to="M-BE-AUTH" type="depends" />
+    <Link from="M-BE-API-SERVERS" to="M-BE-1C-RAC" type="depends" />
+    <Link from="M-BE-API-SERVERS" to="M-BE-CACHE" type="depends" />
+    <Link from="M-BE-API-DBS" to="M-BE-AUTH" type="depends" />
+    <Link from="M-BE-API-DBS" to="M-BE-1C-RAC" type="depends" />
+    <Link from="M-BE-API-DBS" to="M-BE-DB" type="depends" />
+    <Link from="M-BE-API-DBS" to="M-BE-CACHE" type="depends" />
+    <Link from="M-BE-API-SESSIONS" to="M-BE-AUTH" type="depends" />
+    <Link from="M-BE-API-SESSIONS" to="M-BE-1C-RAC" type="depends" />
+    <Link from="M-BE-API-SESSIONS" to="M-BE-CACHE" type="depends" />
+    <Link from="M-BE-API-LOGS" to="M-BE-AUTH" type="depends" />
+    <Link from="M-BE-API-LOGS" to="M-BE-1C-RAC" type="depends" />
+    <Link from="M-FE-AUTH" to="M-FE-CORE" type="depends" />
+    <Link from="M-FE-LAYOUT" to="M-FE-CORE" type="depends" />
+    <Link from="M-FE-LAYOUT" to="M-FE-AUTH" type="depends" />
+    <Link from="M-FE-DASHBOARD" to="M-FE-CORE" type="depends" />
+    <Link from="M-FE-DASHBOARD" to="M-FE-LAYOUT" type="depends" />
+    <Link from="M-FE-SERVERS" to="M-FE-CORE" type="depends" />
+    <Link from="M-FE-SERVERS" to="M-FE-LAYOUT" type="depends" />
+    <Link from="M-FE-DATABASES" to="M-FE-CORE" type="depends" />
+    <Link from="M-FE-DATABASES" to="M-FE-LAYOUT" type="depends" />
+    <Link from="M-FE-SESSIONS" to="M-FE-CORE" type="depends" />
+    <Link from="M-FE-SESSIONS" to="M-FE-LAYOUT" type="depends" />
+    <Link from="M-FE-LOGS" to="M-FE-CORE" type="depends" />
+    <Link from="M-FE-LOGS" to="M-FE-LAYOUT" type="depends" />
+    <Link from="M-FE-SETTINGS" to="M-FE-CORE" type="depends" />
+    <Link from="M-FE-SETTINGS" to="M-FE-LAYOUT" type="depends" />
+  </CrossLinks>
+</KnowledgeGraph>

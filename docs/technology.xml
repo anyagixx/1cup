@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Technology>
+  <Meta>
+    <ProjectName>1c-web-console</ProjectName>
+    <Version>1.0.0</Version>
+    <Created>2026-03-16</Created>
+  </Meta>
+
+  <Runtime>
+    <Backend>
+      <Language>Python</Language>
+      <Version>3.11+</Version>
+      <Runtime>CPython</Runtime>
+    </Backend>
+    <Frontend>
+      <Language>TypeScript</Language>
+      <Version>5.0+</Version>
+      <Runtime>Node.js 20+</Runtime>
+    </Frontend>
+  </Runtime>
+
+  <Frameworks>
+    <Framework type="backend">
+      <Name>FastAPI</Name>
+      <Version>0.109+</Version>
+      <Purpose>REST API framework</Purpose>
+    </Framework>
+    <Framework type="backend">
+      <Name>SQLAlchemy</Name>
+      <Version>2.0+</Version>
+      <Purpose>ORM</Purpose>
+    </Framework>
+    <Framework type="backend">
+      <Name>Alembic</Name>
+      <Version>1.13+</Version>
+      <Purpose>Database migrations</Purpose>
+    </Framework>
+    <Framework type="backend">
+      <Name>Pydantic</Name>
+      <Version>2.5+</Version>
+      <Purpose>Data validation</Purpose>
+    </Framework>
+    <Framework type="frontend">
+      <Name>React</Name>
+      <Version>18.2+</Version>
+      <Purpose>UI framework</Purpose>
+    </Framework>
+    <Framework type="frontend">
+      <Name>Ant Design</Name>
+      <Version>5.13+</Version>
+      <Purpose>UI components</Purpose>
+    </Framework>
+    <Framework type="frontend">
+      <Name>React Router</Name>
+      <Version>6.21+</Version>
+      <Purpose>Routing</Purpose>
+    </Framework>
+    <Framework type="frontend">
+      <Name>Vite</Name>
+      <Version>5.0+</Version>
+      <Purpose>Build tool</Purpose>
+    </Framework>
+  </Frameworks>
+
+  <Databases>
+    <Database type="primary">
+      <Name>PostgreSQL</Name>
+      <Version>15+</Version>
+      <Purpose>Application data, users, settings</Purpose>
+    </Database>
+    <Database type="cache">
+      <Name>Redis</Name>
+      <Version>7+</Version>
+      <Purpose>Caching, session storage, WebSocket pub/sub</Purpose>
+    </Database>
+  </Databases>
+
+  <Libraries>
+    <Library lang="python">
+      <Name>python-jose[cryptography]</Name>
+      <Purpose>JWT handling</Purpose>
+    </Library>
+    <Library lang="python">
+      <Name>passlib[bcrypt]</Name>
+      <Purpose>Password hashing</Purpose>
+    </Library>
+    <Library lang="python">
+      <Name>aioredis</Name>
+      <Purpose>Async Redis client</Purpose>
+    </Library>
+    <Library lang="python">
+      <Name>httpx</Name>
+      <Purpose>Async HTTP client</Purpose>
+    </Library>
+    <Library lang="python">
+      <Name>uvicorn</Name>
+      <Purpose>ASGI server</Purpose>
+    </Library>
+    <Library lang="typescript">
+      <Name>axios</Name>
+      <Purpose>HTTP client</Purpose>
+    </Library>
+    <Library lang="typescript">
+      <Name>dayjs</Name>
+      <Purpose>Date handling</Purpose>
+    </Library>
+    <Library lang="typescript">
+      <Name>recharts</Name>
+      <Purpose>Charts for dashboard</Purpose>
+    </Library>
+  </Libraries>
+
+  <Infrastructure>
+    <Container>
+      <Name>Docker</Name>
+      <Purpose>Containerization</Purpose>
+    </Container>
+    <Container>
+      <Name>Docker Compose</Name>
+      <Purpose>Multi-container orchestration</Purpose>
+    </Container>
+    <WebServer>
+      <Name>Nginx</Name>
+      <Purpose>Reverse proxy, static files</Purpose>
+    </WebServer>
+  </Infrastructure>
+
+  <Integration>
+    <ExternalService>
+      <Name>1C:Enterprise rac utility</Name>
+      <Type>CLI</Type>
+      <Purpose>Cluster administration commands</Purpose>
+    </ExternalService>
+  </Integration>
+</Technology>

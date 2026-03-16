@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Requirements>
+  <Meta>
+    <ProjectName>1c-web-console</ProjectName>
+    <Version>1.0.0</Version>
+    <Created>2026-03-16</Created>
+  </Meta>
+
+  <UseCases>
+    <UseCase id="UC-001" priority="high">
+      <Name>View Cluster Status</Name>
+      <Actor>Administrator</Actor>
+      <Description>View current cluster status, health, and basic metrics</Description>
+      <Preconditions>User is authenticated</Preconditions>
+      <Postconditions>Cluster information displayed on dashboard</Postconditions>
+    </UseCase>
+
+    <UseCase id="UC-002" priority="high">
+      <Name>Manage Servers</Name>
+      <Actor>Administrator</Actor>
+      <Description>View, start, stop, and restart cluster servers and working processes</Description>
+      <Preconditions>User has admin role</Preconditions>
+      <Postconditions>Server state changed</Postconditions>
+    </UseCase>
+
+    <UseCase id="UC-003" priority="high">
+      <Name>Manage Databases</Name>
+      <Actor>Administrator</Actor>
+      <Description>Add, edit, remove information bases from cluster</Description>
+      <Preconditions>User has admin role</Preconditions>
+      <Postconditions>Database list updated</Postconditions>
+    </UseCase>
+
+    <UseCase id="UC-004" priority="high">
+      <Name>Manage Sessions</Name>
+      <Actor>Administrator</Actor>
+      <Description>View active user sessions and terminate them</Description>
+      <Preconditions>User has operator or admin role</Preconditions>
+      <Postconditions>Session terminated or list displayed</Postconditions>
+    </UseCase>
+
+    <UseCase id="UC-005" priority="medium">
+      <Name>View Logs</Name>
+      <Actor>Administrator</Actor>
+      <Description>View and filter cluster event logs in real-time</Description>
+      <Preconditions>User is authenticated</Preconditions>
+      <Postconditions>Logs displayed with filters applied</Postconditions>
+    </UseCase>
+
+    <UseCase id="UC-006" priority="medium">
+      <Name>Real-time Monitoring</Name>
+      <Actor>Administrator</Actor>
+      <Description>Monitor cluster metrics and events via WebSocket</Description>
+      <Preconditions>User is authenticated</Preconditions>
+      <Postconditions>Real-time updates received</Postconditions>
+    </UseCase>
+
+    <UseCase id="UC-007" priority="high">
+      <Name>User Authentication</Name>
+      <Actor>User</Actor>
+      <Description>Login to the system with local credentials</Description>
+      <Preconditions>User account exists</Preconditions>
+      <Postconditions>JWT token issued</Postconditions>
+    </UseCase>
+
+    <UseCase id="UC-008" priority="medium">
+      <Name>Backup Database</Name>
+      <Actor>Administrator</Actor>
+      <Description>Create backup of information base</Description>
+      <Preconditions>User has admin role, database exists</Preconditions>
+      <Postconditions>Backup file created</Postconditions>
+    </UseCase>
+  </UseCases>
+
+  <NonFunctional>
+    <Requirement id="NF-001">Response time &lt; 2 seconds for all API calls</Requirement>
+    <Requirement id="NF-002">Support up to 100 concurrent users</Requirement>
+    <Requirement id="NF-003">WebSocket connection for real-time updates</Requirement>
+    <Requirement id="NF-004">JWT token expiration: 30 minutes</Requirement>
+    <Requirement id="NF-005">Password hashing: bcrypt</Requirement>
+  </NonFunctional>
+
+  <Constraints>
+    <Constraint id="C-001">Must work with 1C:Enterprise 8.3.x on Ubuntu</Constraint>
+    <Constraint id="C-002">Must use rac CLI utility for 1C integration</Constraint>
+    <Constraint id="C-003">Local authentication only (no external providers)</Constraint>
+  </Constraints>
+</Requirements>
