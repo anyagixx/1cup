@@ -5,7 +5,7 @@
 ## Быстрая установка
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/anyagixx/1cup/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/anyagixx/1cup/master/install.sh | bash
 ```
 
 Установщик спросит:
